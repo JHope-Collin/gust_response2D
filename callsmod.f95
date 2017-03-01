@@ -23,7 +23,7 @@ function vor2d(x,x0)
         
         vor2d(1:2) = vor2d(2:1:-1)
         
-        vor2d(1) = -vor2d(1)
+        vor2d(2) = -vor2d(2)
         
 end function
 

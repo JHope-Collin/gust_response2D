@@ -1,0 +1,29 @@
+#gnuplot script for Sears function for various camberlines
+
+set terminal postscript enhanced 'Arial' 20
+
+##########################################################
+
+set output 'sears.ps'
+
+set key
+
+set xlabel 'Re{L}'
+set ylabel 'Im{L}'
+set title 'Sears Function for various camberlines'
+set grid
+set key
+
+set style line 1 lt 1 lw 1 lc "black"
+set style line 2 lt 2 lw 1 lc "blue"
+set style line 3 lt 3 lw 1 lc "red"
+set style line 4 lt 4 lw 1 lc "green"
+
+wloop  = 50
+wstart = 0.05
+wend   = 0.75
+
+plot for [n=1:8] 'response.dat' u 5:6 every ::((n-1)*wloop)::(n*wloop-1) \
+	title 'geometry '.n w lp ls n
+
+###########################################################

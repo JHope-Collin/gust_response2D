@@ -54,8 +54,8 @@ do 1 i = 1,Ny
         stencil_lower(row,row)      = -1.0
         stencil_lower(row,row+Ny+1) =  1.0
         
-        prhs_upper(row) = -imag*dc/kappa
-        prhs_lower(row) = -imag*dc/kappa
+        prhs_upper(row) = (imag*dc/kappa)*zeta_upper(1,i)
+        prhs_lower(row) = (imag*dc/kappa)*zeta_lower(1,i)
         
         !domain exit BC
         row = Ny + Nx*(Ny+2) + i
@@ -106,8 +106,8 @@ do 1 i = 1,Ny
                 stencil_lower(row,row - (Ny+1)) =  1.0
                 stencil_lower(row,row + (Ny+2)) =  1.0
                 
-                prhs_upper(row) = zeta_upper(1,i-1)*dc*dc
-                prhs_lower(row) = zeta_lower(1,i-1)*dc*dc
+                prhs_upper(row) = -zeta_upper(1,i-1)*dc*dc
+                prhs_lower(row) = -zeta_lower(1,i-1)*dc*dc
                 
         2 continue
         
@@ -161,8 +161,8 @@ do 3 i = 2,Nx-1
                 stencil_lower(row,row + (Ny+2)) =  1.0
                 stencil_lower(row,row - (Ny+2)) =  1.0
                 
-                prhs_upper(row) = zeta_upper(i,j-1)*dc*dc
-                prhs_lower(row) = zeta_lower(i,j-1)*dc*dc
+                prhs_upper(row) = -zeta_upper(i,j-1)*dc*dc
+                prhs_lower(row) = -zeta_lower(i,j-1)*dc*dc
                 
         4 continue
 
@@ -215,8 +215,8 @@ do 3 i = 2,Nx-1
                 stencil_lower(row,row - (Ny+2)) =  1.0
                 stencil_lower(row,row + (Ny+1)) =  1.0
                 
-                prhs_upper(row) = zeta_upper(Nx,i-1)*dc*dc
-                prhs_lower(row) = zeta_lower(Nx,i-1)*dc*dc
+                prhs_upper(row) = -zeta_upper(Nx,i-1)*dc*dc
+                prhs_lower(row) = -zeta_lower(Nx,i-1)*dc*dc
         
         5 continue
         
