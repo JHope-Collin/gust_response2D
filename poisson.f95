@@ -396,9 +396,9 @@ zeta_upper = imag*kappa*exp(imag*omega*tau_upper)
 zeta_lower = imag*kappa*exp(imag*omega*tau_lower)
 
 !write vorticity field
-do 10 j = 1,Ny
+do 10 j = Ny,1,-1
 
-        xc(2) = -1.0 + j*dc
+        xc(2) = -j*dc
         
         do 11 i = 1,Nx
                 

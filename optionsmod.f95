@@ -13,13 +13,13 @@ integer, parameter :: wloop = 40      !number of frequency iterations
 
 !iteration ranges
 real, parameter :: wstart = 2.000     !lowest frequency modelled
-real, parameter :: wend   = 5.00      !highest frequency modelled
+real, parameter :: wend   = 2.00      !highest frequency modelled
 
-real, parameter :: hstart = 0.000     !lowest camber modelled
-real, parameter :: hend   = 0.000     !highest camber modelled
+real, parameter :: hstart = 0.020     !lowest camber modelled
+real, parameter :: hend   = 0.020     !highest camber modelled
 
-real, parameter :: mstart = 0.200     !lowest maxima location modelled
-real, parameter :: mend   = 0.800     !highest maxima location modelled
+real, parameter :: mstart = 0.500     !lowest maxima location modelled
+real, parameter :: mend   = 0.500     !highest maxima location modelled
 
 !discretisation routine
 integer, parameter :: resolution = 12 !panels per wavelength

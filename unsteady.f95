@@ -15,6 +15,7 @@ real, intent(in):: alpha
 complex, intent(out), dimension(N) :: gamU       !unsteady circulation distribution
 
 !internal variables
+real, dimension(2) :: xc
 real :: Ux
 real :: Uy
 
@@ -33,12 +34,14 @@ complex, dimension(N,N) :: a
 
 complex, dimension(N,N) :: psi_upper, psi_lower
 
-integer :: poisson_order, i
+integer :: poisson_order, i, j, Nx, Ny
 
 !intialise
 Ux = cos(alpha)
 Uy = sin(alpha)
-poisson_order = (Np+1)*(5*Np+1)
+Nx = 5*Np+1
+Ny = Np+1
+poisson_order = Nx*Ny
 
 
 call zeta_field(gamS,Ux,zeta_upper,zeta_lower)
@@ -51,8 +54,41 @@ call poisson_matrix(zeta_upper,    zeta_lower, &
 streamfunction_upper = solvecomplex8(poisson_order,stencil_upper,prhs_upper)
 streamfunction_lower = solvecomplex8(poisson_order,stencil_lower,prhs_lower)
 
-psi_upper(1:5*Np+1,1:Np+1) = cvec2mat(poisson_order, 5*Np+1, Np+1, streamfunction_upper(1:poisson_order))
-psi_lower(1:5*Np+1,1:Np+1) = cvec2mat(poisson_order, 5*Np+1, Np+1, streamfunction_lower(1:poisson_order))
+psi_upper(1:Nx,1:Ny) = cvec2mat(poisson_order, Nx, Ny, streamfunction_upper(1:poisson_order))
+psi_lower(1:Nx,1:Ny) = cvec2mat(poisson_order, Nx, Ny, streamfunction_lower(1:poisson_order))
+
+!write streamfunction
+        do 10 j = Ny,1,-1
+                
+                xc(2) = -j*dc
+                
+                do 11 i = 1,Nx
+                        
+                        xc(1) = -2.0 + (i-1)*dc
+                        
+                        write(file3,*) xc(1), xc(2), real(psi_lower(i,j)), aimag(psi_lower(i,j))
+                
+                11 continue
+                
+                write(file3,*) ''
+        
+        10 continue
+        
+        do 12 j = 1,Ny
+                
+                xc(2) = j*dc
+                
+                do 13 i = 1,Nx
+                        
+                        xc(1) = -2.0 + (i-1)*dc
+                        
+                        write(file3,*) xc(1), xc(2), real(psi_upper(i,j)), aimag(psi_upper(i,j))
+                
+                13 continue
+                
+                write(file3,*) ''
+
+12 continue
 
 call unsteadymatrix(streamfunction_upper,streamfunction_lower,a,rhs,up_upper,up_lower)
 

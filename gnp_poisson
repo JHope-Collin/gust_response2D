@@ -1,0 +1,65 @@
+#gnuplot script for plotting vorticity and streamfunction fields
+
+set terminal pngcairo size 700,524 enhanced font 'Verdana,10'
+
+##################################################################
+
+set output 'zetaRe.png'
+set title 'Mean flow distorted Vorticity Field (Real)'
+
+set xlabel 'x/c'
+set ylabel 'y/c'
+set cblabel 'Re{vorticity}'
+set palette defined ( 0 "green", 1 "blue", 2 "red") 
+
+plot 'zetafield.dat' using 1:2:3 notitle with image
+
+##################################################################
+
+set output 'zetaIm.png'
+set title 'Mean flow distorted Vorticity Field (Imaginary)'
+
+set xlabel 'x/c'
+set ylabel 'y/c'
+set cblabel 'Im{vorticity}'
+set palette defined ( 0 "green", 1 "blue", 2 "red") 
+
+plot 'zetafield.dat' using 1:2:4 notitle with image
+
+##################################################################
+
+set output 'tau.png'
+set title 'Mean flow travel time'
+
+set xlabel 'x/c'
+set ylabel 'y/c'
+set cblabel 'tau'
+set palette defined ( 0 "green", 1 "blue", 2 "red") 
+
+plot 'zetafield.dat' using 1:2:5 notitle with image
+
+##################################################################
+
+set output 'psiRe.png'
+set title 'Streamfunction Field (Real)'
+
+set xlabel 'x/c'
+set ylabel 'y/c'
+set cblabel 'Re{psi}$'
+set palette defined ( 0 "green", 1 "blue", 2 "red") 
+
+plot 'psifield.dat' using 1:2:3 notitle with image
+
+##################################################################
+
+set output 'psiIm.png'
+set title 'Streamfunction Field (Imaginary)'
+
+set xlabel 'x/c'
+set ylabel 'y/c'
+set cblabel 'Im{psi}'
+set palette defined ( 0 "green", 1 "blue", 2 "red") 
+
+plot 'psifield.dat' using 1:2:4 notitle with image
+
+##################################################################

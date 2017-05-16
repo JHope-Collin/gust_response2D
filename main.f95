@@ -28,6 +28,9 @@ write(file1,*) '# camber height,', 'maxima location,', 'reduced frequency,', &
 open(unit=file2, file='zetafield.dat', action='write', status='replace')
 write(file2,*) '#  x  ,  y  ,  Re{zeta}  ,  Im{zeta}  ,  tau'
 
+open(unit=file3, file='psifield.dat', action='write', status='replace')
+write(file3,*) '#  x  ,  y  ,  Re{psi}  ,  Im{psi}'
+
 print *, 'start'
 
 !do 1 i = hloop,1,-1
@@ -103,5 +106,7 @@ end if
 
 close(unit=file1, status='keep')
 close(unit=file2, status='keep')
+close(unit=file3, status='keep')
+
 
 end program main
