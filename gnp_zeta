@@ -1,0 +1,21 @@
+#gnuplot script for plotting vorticity and streamfunction fields
+
+set terminal pngcairo size 350,262 enhanced font 'Verdana,10'
+
+set output 'zetaRe.png'
+
+set title 'Mean flow distorted Vorticity Field'
+
+set xlabel 'x/c'
+set ylabel 'y/c'
+
+#set xrange [-1.0:1.0]
+#set yrange [-2.0:3.0]
+
+set cblabel 'vorticity'
+
+set view map
+
+set palette defined ( 0 "green", 1 "blue", 2 "red") #, 3 "orange" )
+
+plot 'zetafield.dat' using 1:2:3 with image

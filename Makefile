@@ -42,7 +42,7 @@ a.out : $(FOBJ) $(MOBJ)
 %.mod : %mod.f95
 	$(FCMP) $(FOPT) -c $<
 
-$(FOBJ) : $(MODS)
+$(FOBJ) : $(MOBJ)
 
 unsteady.o : poisson.o
 

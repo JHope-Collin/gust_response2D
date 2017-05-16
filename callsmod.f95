@@ -25,8 +25,9 @@ function vor2d(x,x0)
         
         vor2d(2) = -vor2d(2)
         
-end function
+end function vor2d
 
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 subroutine panel(i,xv,xc,no,ta)
         
@@ -113,6 +114,7 @@ subroutine panel(i,xv,xc,no,ta)
         
 end subroutine panel
 
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function solvecomplex(order,a,rhs)
         
@@ -144,6 +146,7 @@ function solvecomplex(order,a,rhs)
         
 end function solvecomplex
 
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function solvecomplex8(order,a,rhs)
         
@@ -174,6 +177,225 @@ function solvecomplex8(order,a,rhs)
         solvecomplex8 = rhs
         
 end function solvecomplex8
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function dotcr(length,a,b)
+        
+        !variables
+        implicit none
+        
+        !inputs
+        integer :: length
+        complex, dimension(length) :: a
+        real, dimension(length) :: b
+        
+        !outputs
+        complex :: dotcr
+
+        !internal variables
+        integer :: i
+        
+        dotcr = 0.0
+        
+        do i = 1,length
+                
+                dotcr = dotcr + a(i)*b(i)
+        
+        end do
+        
+end function dotcr
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function dotrc(length,a,b)
+        
+        !variables
+        implicit none
+        
+        !inputs
+        integer :: length
+        real, dimension(length) :: a
+        complex, dimension(length) :: b
+        
+        !outputs
+        complex :: dotrc
+
+        !internal variables
+        integer :: i
+
+        dotrc = 0.0
+        
+        do i = 1,length
+                
+                dotrc = dotrc + a(i)*b(i)
+        
+        end do
+        
+end function dotrc
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function dotcc(length,a,b)
+        
+        !variables
+        implicit none
+        
+        !inputs
+        integer :: length
+        complex, dimension(length) :: a,b
+        
+        !outputs
+        complex :: dotcc
+
+        !internal variables
+        integer :: i
+
+        dotcc = 0.0
+        
+        do i = 1,length
+
+                dotcc = dotcc + a(i)*b(i)
+
+        end do
+        
+end function dotcc
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function rvec2mat(vecN,matR,matC,vec)
+        
+        !variables
+        implicit none
+        
+        !inputs
+        integer :: vecN         !number of vector components
+        integer :: matR         !length of matrix rows (number of columns)
+        integer :: matC         !length of matrix columns (number of rows)
+        real,  dimension(vecN)   :: vec
+        
+        !outputs
+        real, dimension(matR,matC) :: rvec2mat
+        
+        !internal variables
+        integer :: i
+        
+        if (matR*matC .ne. vecN) then
+        print *, 'rvec2mat: incompatible sizes'
+        return
+        end if
+        
+        rvec2mat = 0.0
+        
+        do 1 i = 1,matR
+                
+                rvec2mat(i,1:matC) = vec((i-1)*matC+1:i*matC)
+        
+        1 continue
+        
+end function rvec2mat
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function cvec2mat(vecN,matR,matC,vec)
+        
+        !variables
+        implicit none
+        
+        !inputs
+        integer :: vecN         !number of vector components
+        integer :: matR         !length of matrix rows (number of columns)
+        integer :: matC         !length of matrix columns (number of rows)
+        complex, dimension(vecN)   :: vec
+        
+        !outputs
+        complex, dimension(matR,matC) :: cvec2mat
+        
+        !internal variables
+        integer :: i
+
+        if (matR*matC .ne. vecN) then
+        print *, 'cvec2mat: incompatible sizes'
+        return
+        end if
+        
+        cvec2mat = 0.0
+        
+        do 1 i = 1,matR
+                
+                cvec2mat(i,1:matC) = vec((i-1)*matC+1:i*matC)
+        
+        1 continue
+
+end function cvec2mat
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function rmat2vec(vecN,matR,matC,mat)
+        
+        !variables
+        implicit none
+        
+        !inputs
+        integer :: vecN         !number of vector components
+        integer :: matR         !length of matrix rows (number of columns)
+        integer :: matC         !length of matrix columns (number of rows)
+        real, dimension(matR,matC) :: mat
+        
+        !outputs
+        real, dimension(vecN)   :: rmat2vec
+        
+        !internal variables
+        integer :: i
+        
+        if (matR*matC .ne. vecN) then
+        print *, 'rmat2vec: incompatible sizes'
+        return
+        end if
+        
+        rmat2vec = 0.0
+        
+        do 1 i = 1,matR
+                
+                rmat2vec((i-1)*matC+1:i*matC) = mat(i,1:matC)
+        
+        1 continue
+
+end function rmat2vec
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+function cmat2vec(vecN,matR,matC,mat)
+        
+        !variables
+        implicit none
+        
+        !inputs
+        integer :: vecN         !number of vector components
+        integer :: matR         !length of matrix rows (number of columns)
+        integer :: matC         !length of matrix columns (number of rows)
+        complex, dimension(matR,matC) :: mat
+        
+        !outputs
+        complex,  dimension(vecN)   :: cmat2vec
+        
+        !internal variables
+        integer :: i
+        
+        if (matR*matC .ne. vecN) then
+        print *, 'cmat2vec: incompatible sizes'
+        return
+        end if
+        
+        cmat2vec = 0.0
+        
+        do 1 i = 1,matR
+                
+                cmat2vec((i-1)*matC+1:i*matC) = mat(i,1:matC)
+        
+        1 continue
+
+end function cmat2vec
 
 
 end module calls

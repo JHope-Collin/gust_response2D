@@ -88,10 +88,10 @@ do 1 i = 1,Np
         a(i,Np) = no(2)
 
         !known horizontal freestream component
-        rhs(i) = no(1)
+        rhs(i) = -no(1)
 
         !bound vorticity
-        do 2 j = 1,Np
+        do 1 j = 1,Np
                 
                 !influencing vortex
                 call panel(j,xv,c,nor,t)
@@ -100,21 +100,11 @@ do 1 i = 1,Np
 
                 selfinfluence(i,j) = u(1)*no(1) + u(2)*no(2)
         
-        2 continue
-
-!print 100, real(selfinfluence(i,1:Np))
-!print 100, aimag(selfinfluence(i,1:Np))
-
 1 continue
 
 !influence of bound vorticity for zero leading edge vorticity
 a(1:Np,1:Np-1) = selfinfluence(1:Np,2:Np)
 
-!do 3 i = 1,Np
-!        print 100, real(a(i,1:Np))
-!3 continue
-!print *, 'imag influence', sum(aimag(a))
-!
 !100 FORMAT(100F8.4)
 
 end subroutine steadymatrix

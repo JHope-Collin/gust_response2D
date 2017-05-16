@@ -7,22 +7,22 @@ implicit none
 
 !options
 !number of loops
-integer, parameter :: hloop = 2         !number of camber height iterations
-integer, parameter :: mloop = 4         !number of maxima location iterations
-integer, parameter :: wloop = 50        !number of frequency iterations
+integer, parameter :: hloop = 4       !number of camber height iterations
+integer, parameter :: mloop = 4       !number of maxima location iterations
+integer, parameter :: wloop = 40      !number of frequency iterations
 
 !iteration ranges
-real, parameter :: wstart = 0.05        !lowest frequency modelled
-real, parameter :: wend   = 0.75        !highest frequency modelled
+real, parameter :: wstart = 2.000     !lowest frequency modelled
+real, parameter :: wend   = 5.00      !highest frequency modelled
 
-real, parameter :: hstart = 0.010       !lowest camber modelled
-real, parameter :: hend   = 0.050       !highest camber modelled
+real, parameter :: hstart = 0.000     !lowest camber modelled
+real, parameter :: hend   = 0.000     !highest camber modelled
 
-real, parameter :: mstart = 0.200       !lowest maxima location modelled
-real, parameter :: mend   = 0.800       !highest maxima location modelled
+real, parameter :: mstart = 0.200     !lowest maxima location modelled
+real, parameter :: mend   = 0.800     !highest maxima location modelled
 
 !discretisation routine
-integer, parameter :: resolution = 15   !panels per wavelength
+integer, parameter :: resolution = 12 !panels per wavelength
 
 !panel construction
 integer, parameter :: grid   = 0        !0 for constant panel length, 1 for cosine length
@@ -30,10 +30,10 @@ real, parameter    :: vpanel = 0.25     !position of vortex
 real, parameter    :: cpanel = 0.75     !position of collocation point
 
 !wake modelling
-integer, parameter :: wake     = 1      !1 for wake, 0 for no wake
-integer, parameter :: Nwp      = 16     !number of wake periods modelled
-integer, parameter :: wakefar  = 8      !chord lengths from trailing edge to start wake far field
-real, parameter :: wakestart   = 0.25   !distance from trailing edge of first wake vortex
+integer, parameter :: wake       = 1       !1 for wake, 0 for no wake
+integer, parameter :: Nwp        = 16      !number of wake periods modelled
+integer, parameter :: wakefar    = 99999   !chord lengths from trailing edge to start wake far field
+real, parameter    :: wakestart  = 0.25    !distance from trailing edge of first wake vortex
 
 !end of options
 !------------------------------------------------------------------------------------------
@@ -131,7 +131,7 @@ subroutine iteration(i,j,s)
                 end if
 
                 Nw = Nw + Np
-
+                
                 if ((Nw - Np)*dc > wakefar) then
                 
                         Nwfar = Np + ceiling(wakefar/dc)

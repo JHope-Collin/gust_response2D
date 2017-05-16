@@ -11,16 +11,22 @@ complex, dimension(N) :: gamS
 complex, dimension(N) :: gamU
 
 complex, dimension(hloop,mloop,wloop) :: L
+real :: l0
 
 complex :: response
 
 real :: alpha
+
+complex, dimension(N,2) :: up_upper, up_lower
 
 integer :: i,j,r,s
 
 open(unit=file1, file='response.dat', action='write', status='replace')
 write(file1,*) '# camber height,', 'maxima location,', 'reduced frequency,', &
                 'norm(l),','Re{l},','Im{l}'
+
+open(unit=file2, file='zetafield.dat', action='write', status='replace')
+write(file2,*) '#  x  ,  y  ,  Re{zeta}  ,  Im{zeta}  ,  tau'
 
 print *, 'start'
 
@@ -47,19 +53,20 @@ do 1 s = 1,wloop
                 end if
 
         call steady(gamS,alpha)
+        l0 = sum(real(gamS))
 
                 if(i.eq.1 .AND. j.eq.1 .AND. s.eq.1) then
                 !print *, 'steady ok'
                 end if
         
-        call unsteady(gamS,alpha,gamU)
+        call unsteady(gamS,alpha,gamU,up_upper,up_lower)
 
                 if(i.eq.1 .AND. j.eq.1 .AND. s.eq.1) then
                 !print *, 'unsteady ok'
                 end if
         
-        !call lift(gamS,gamU,response)
-        response = sum(gamU)
+        call lift(gamS,gamU,alpha,up_upper,up_lower,response)
+        !response = sum(gamU)/l0
 
                 if(i.eq.1 .AND. j.eq.1 .AND. s.eq.1) then
                 !print *, 'lift ok'
@@ -67,20 +74,8 @@ do 1 s = 1,wloop
 
         L(i,j,s) = response
         
-        !print *, &
-        !'iteration', (i-1)*(mloop*wloop) + (j-1)*wloop + s, &
-        !'Np', Np, &
-        !'(h,m,k)', h, m, k, &
-        !'steady', real(sum(gamS)), &
-        !'unsteady', response
-        !print *, ''
-
-        if (s.eq.wloop) then
-        print *, ''
-        end if
-        
-        go to 2
-        if (s.eq.1) then
+        !go to 2 !comment out for single iteration
+                if (s.eq.1) then
                 if (j.eq.1) then
                 if (i.eq.1) then
                 go to 3
@@ -95,12 +90,18 @@ do 1 s = 1,wloop
                 end if
                 4 continue
 
-!               1, 2, 3, 4,                                     5,              6        
+!              1, 2, 3, 4,                                           5,              6        
 write(file1,*) h, m, k, norm2([real(response),aimag(response)]), real(response), aimag(response)
+
+if (s.eq.wloop) then
+write(file1,*) ''
+end if
 
 1 continue
 
 3 continue
-        
+
+close(unit=file1, status='keep')
+close(unit=file2, status='keep')
 
 end program main
