@@ -185,8 +185,8 @@ do 2 i = 2,Nx-1
         !prhs_lower(row) = -imag*zeta_lower(Nx,1)/kappa
         
         !for |zeta| = i*kappa
-        prhs_upper(row) = zeta_upper(Nx,1)
-        prhs_lower(row) = zeta_lower(Nx,1)
+        prhs_upper(row) = -imag*zeta_upper(Nx,1)/kappa
+        prhs_lower(row) = -imag*zeta_lower(Nx,1)/kappa
         
         !outlet surface nodes
         do 4 j = 2,Ny-1

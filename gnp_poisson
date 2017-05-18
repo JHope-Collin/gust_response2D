@@ -2,6 +2,10 @@
 
 set terminal pngcairo size 700,524 enhanced font 'Verdana,10'
 
+#airfoil
+f(x) = (x>0 && x<1) ? 0 : 1/0
+
+
 ##################################################################
 
 set output 'zetaRe.png'
@@ -12,7 +16,8 @@ set ylabel 'y/c'
 set cblabel 'Re{vorticity}'
 set palette defined ( 0 "green", 1 "blue", 2 "red") 
 
-plot 'zetafield.dat' using 1:2:3 notitle with image
+plot 'zetafield.dat' using 1:2:3 notitle with image, \
+	f(x) notitle w l lt 1 lw 3 lc "black"
 
 ##################################################################
 
@@ -24,7 +29,8 @@ set ylabel 'y/c'
 set cblabel 'Im{vorticity}'
 set palette defined ( 0 "green", 1 "blue", 2 "red") 
 
-plot 'zetafield.dat' using 1:2:4 notitle with image
+plot 'zetafield.dat' using 1:2:4 notitle with image, \
+	f(x) notitle w l lt 1 lw 3 lc "black"
 
 ##################################################################
 
@@ -36,7 +42,8 @@ set ylabel 'y/c'
 set cblabel 'tau'
 set palette defined ( 0 "green", 1 "blue", 2 "red") 
 
-plot 'zetafield.dat' using 1:2:5 notitle with image
+plot 'zetafield.dat' using 1:2:5 notitle with image, \
+	f(x) notitle w l lt 1 lw 3 lc "black"
 
 ##################################################################
 
@@ -45,10 +52,11 @@ set title 'Streamfunction Field (Real)'
 
 set xlabel 'x/c'
 set ylabel 'y/c'
-set cblabel 'Re{psi}$'
+set cblabel 'Re{psi}'
 set palette defined ( 0 "green", 1 "blue", 2 "red") 
 
-plot 'psifield.dat' using 1:2:3 notitle with image
+plot 'psifield.dat' using 1:2:3 notitle with image, \
+	f(x) notitle w l lt 1 lw 3 lc "black"
 
 ##################################################################
 
@@ -60,6 +68,31 @@ set ylabel 'y/c'
 set cblabel 'Im{psi}'
 set palette defined ( 0 "green", 1 "blue", 2 "red") 
 
-plot 'psifield.dat' using 1:2:4 notitle with image
+plot 'psifield.dat' using 1:2:4 notitle with image, \
+	f(x) notitle w l lt 1 lw 3 lc "black"
+
+##################################################################
+
+set output 'pertubationRe.png'
+set title 'Velocity Perturbation Field (Real)'
+
+set xlabel 'x/c'
+set ylabel 'y/c'
+set palette rgb 7,5,15
+
+plot 'psifield.dat' using 1:2:($5*0.05):($6*0.05) notitle w vectors head size 0.08,20,60, \
+	f(x) notitle w l lt 1 lw 3 lc "black"
+
+##################################################################
+
+set output 'pertubationIm.png'
+set title 'Velocity Perturbation Field (Imaginary)'
+
+set xlabel 'x/c'
+set ylabel 'y/c'
+set palette rgb 7,5,15
+
+plot 'psifield.dat' using 1:2:($7*0.05):($8*0.05) notitle w vectors head size 0.08,20,60, \
+	f(x) notitle w l lt 1 lw 3 lc "black"
 
 ##################################################################

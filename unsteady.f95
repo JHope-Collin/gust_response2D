@@ -33,6 +33,7 @@ complex, dimension(N)   :: rhs
 complex, dimension(N,N) :: a
 
 complex, dimension(N,N) :: psi_upper, psi_lower
+complex, dimension(N,N,2) :: vhat_u, vhat_l
 
 integer :: poisson_order, i, j, Nx, Ny
 
@@ -57,6 +58,8 @@ streamfunction_lower = solvecomplex8(poisson_order,stencil_lower,prhs_lower)
 psi_upper(1:Nx,1:Ny) = cvec2mat(poisson_order, Nx, Ny, streamfunction_upper(1:poisson_order))
 psi_lower(1:Nx,1:Ny) = cvec2mat(poisson_order, Nx, Ny, streamfunction_lower(1:poisson_order))
 
+call velfield_perturbation(psi_upper, psi_lower, vhat_u, vhat_l)
+
 !write streamfunction
         do 10 j = Ny,1,-1
                 
@@ -65,8 +68,11 @@ psi_lower(1:Nx,1:Ny) = cvec2mat(poisson_order, Nx, Ny, streamfunction_lower(1:po
                 do 11 i = 1,Nx
                         
                         xc(1) = -2.0 + (i-1)*dc
-                        
-                        write(file3,*) xc(1), xc(2), real(psi_lower(i,j)), aimag(psi_lower(i,j))
+
+                        !               1      2      3                     4
+                        write(file3,*) xc(1), xc(2), real(psi_lower(i,j)), aimag(psi_lower(i,j)) &
+                        !                             5,6                   7,8
+                                                   , real(vhat_l(i,j,1:2)),    aimag(vhat_l(i,j,1:2))
                 
                 11 continue
                 
@@ -82,7 +88,10 @@ psi_lower(1:Nx,1:Ny) = cvec2mat(poisson_order, Nx, Ny, streamfunction_lower(1:po
                         
                         xc(1) = -2.0 + (i-1)*dc
                         
-                        write(file3,*) xc(1), xc(2), real(psi_upper(i,j)), aimag(psi_upper(i,j))
+                        !               1      2      3                     4
+                        write(file3,*) xc(1), xc(2), real(psi_upper(i,j)), aimag(psi_upper(i,j)) &
+                        !                             5,6                   7,8
+                                                   , real(vhat_u(i,j,1:2)),    aimag(vhat_u(i,j,1:2))
                 
                 13 continue
                 

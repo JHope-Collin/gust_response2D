@@ -5,7 +5,8 @@ FSRC = main.f95 \
 	steady.f95 \
 	unsteady.f95 \
 	poisson.f95 \
-	lift.f95
+	lift.f95 \
+	field.f95
 
 FMOD = constantsmod.f95 \
 	optionsmod.f95 \
