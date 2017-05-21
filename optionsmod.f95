@@ -7,22 +7,26 @@ implicit none
 
 !options
 !number of loops
-integer, parameter :: hloop = 4       !number of camber height iterations
-integer, parameter :: mloop = 4       !number of maxima location iterations
-integer, parameter :: wloop = 40      !number of frequency iterations
+integer, parameter :: hloop = 3         !number of camber height iterations
+integer, parameter :: mloop = 3         !number of maxima location iterations
+integer, parameter :: wloop = 20        !number of frequency iterations
 
 !iteration ranges
-real, parameter :: wstart = 2.000     !lowest frequency modelled
-real, parameter :: wend   = 2.00      !highest frequency modelled
+real, parameter :: wstart = 0.10        !lowest frequency modelled
+real, parameter :: wend   = 1.00        !highest frequency modelled
 
-real, parameter :: hstart = 0.020     !lowest camber modelled
-real, parameter :: hend   = 0.020     !highest camber modelled
+real, parameter :: hstart = 0.0         !lowest camber modelled in %
+real, parameter :: hend   = 4.0         !highest camber modelled in %
 
-real, parameter :: mstart = 0.500     !lowest maxima location modelled
-real, parameter :: mend   = 0.500     !highest maxima location modelled
+real, parameter :: mstart = 20.0        !lowest maxima location modelled in %
+real, parameter :: mend   = 80.0        !highest maxima location modelled in %
 
 !discretisation routine
-integer, parameter :: resolution = 12 !panels per wavelength
+integer, parameter :: resolution = 10   !panels per wavelength
+
+!plotting iteration
+integer, dimension(3), parameter :: plot = [0, 0, 0]    !iteration to plot field functions
+integer, parameter :: single = 0                        !single iteration
 
 !panel construction
 integer, parameter :: grid   = 0        !0 for constant panel length, 1 for cosine length
@@ -31,7 +35,7 @@ real, parameter    :: cpanel = 0.75     !position of collocation point
 
 !wake modelling
 integer, parameter :: wake       = 1       !1 for wake, 0 for no wake
-integer, parameter :: Nwp        = 16      !number of wake periods modelled
+integer, parameter :: Nwp        = 12      !number of wake periods modelled
 integer, parameter :: wakefar    = 99999   !chord lengths from trailing edge to start wake far field
 real, parameter    :: wakestart  = 0.25    !distance from trailing edge of first wake vortex
 
@@ -101,8 +105,8 @@ subroutine iteration(i,j,s)
                 m = mstart
         end if
 
-        h = hstart + hstep*(i-1.0)
-        m = mstart + mstep*(j-1.0)
+        h = (hstart + hstep*(i-1.0))*0.01
+        m = (mstart + mstep*(j-1.0))*0.01
         k = wstart + wstep*(s-1.0)
 
         omega = 2.0*k

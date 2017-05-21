@@ -18,5 +18,9 @@ integer, parameter :: file2 = 98
 integer, parameter :: file3 = 97
 integer, parameter :: file4 = 96
 integer, parameter :: file5 = 95
+integer, parameter :: file6 = 94
+
+!print cases
+character(30), parameter :: rFORMAT = '(3F8.2 , 100F14.5)'
 
 end module constants

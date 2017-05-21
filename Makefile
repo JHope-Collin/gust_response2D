@@ -54,4 +54,4 @@ unsteady.o : poisson.o
 .PHONY : clean
 
 clean :
-	rm -f a.out $(FOBJ) $(MODS) $(MOBJ) *.dat *.ps
+	rm -f a.out $(FOBJ) $(MODS) $(MOBJ)

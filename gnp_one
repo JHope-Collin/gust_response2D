@@ -5,6 +5,10 @@ set terminal pngcairo size 700,524 enhanced font 'Verdana,10'
 #airfoil
 f(x) = (x>0 && x<1) ? 0 : 1/0
 
+mag(x,y) = sqrt(x*x + y*y)
+
+scale = 0.06
+
 
 ##################################################################
 
@@ -80,7 +84,7 @@ set xlabel 'x/c'
 set ylabel 'y/c'
 set palette rgb 7,5,15
 
-plot 'psifield.dat' using 1:2:($5*0.05):($6*0.05) notitle w vectors head size 0.08,20,60, \
+plot 'psifield.dat' using 1:2:($5*0.08):($6*0.08) notitle w vectors head size 0.08,20,60, \
 	f(x) notitle w l lt 1 lw 3 lc "black"
 
 ##################################################################
@@ -92,7 +96,59 @@ set xlabel 'x/c'
 set ylabel 'y/c'
 set palette rgb 7,5,15
 
-plot 'psifield.dat' using 1:2:($7*0.05):($8*0.05) notitle w vectors head size 0.08,20,60, \
+plot 'psifield.dat' using 1:2:($7*0.08):($8*0.08) notitle w vectors head size 0.08,20,60, \
 	f(x) notitle w l lt 1 lw 3 lc "black"
 
+##################################################################
+
+set output 'velocityRe.png'
+set title 'Unsteady Velocity Field (Real)'
+
+set xlabel 'x/c'
+set ylabel 'y/c'
+set palette rgb 7,5,15
+
+plot 'velocities.dat' using 1:2:($3*0.08):($4*0.08) notitle w vectors head size 0.08,20,60, \
+	f(x) notitle w l lt 1 lw 3 lc "black"
+
+##################################################################
+
+set output 'velocityIm.png'
+set title 'Unsteady Velocity Field (Imaginary)'
+
+set xlabel 'x/c'
+set ylabel 'y/c'
+set palette rgb 7,5,15
+
+plot 'velocities.dat' using 1:2:($5*0.08):($6*0.08) notitle w vectors head size 0.08,20,60, \
+	f(x) notitle w l lt 1 lw 3 lc "black"
+
+##################################################################
+#
+#set output 'pertubationRe2.png'
+#set title 'Velocity Perturbation Field (Real)'
+#
+#set xlabel 'x/c'
+#set ylabel 'y/c'
+#
+#set cbrange [0:1]
+#set palette rgb 7,5,15
+#
+#plot 'psifield.dat' using 1:2:(scale*$5/mag($5,$6)):(scale*$6/mag($5,$6)):(mag($5,$6)) notitle w vectors lc palette z head size 0.06,20,60, \
+#	f(x) notitle w l lt 1 lw 3 lc "black"
+#
+##################################################################
+#
+#set output 'pertubationIm2.png'
+#set title 'Velocity Perturbation Field (Imaginary)'
+#
+#set xlabel 'x/c'
+#set ylabel 'y/c'
+#
+#set cbrange [0:1]
+#set palette rgb 7,5,15
+#
+#plot 'psifield.dat' using 1:2:(scale*$7/mag($7,$8)):(scale*$8/mag($7,$8)):(mag($7,$8)) notitle w vectors lc palette z head size 0.08,20,60, \
+#	f(x) notitle w l lt 1 lw 3 lc "black"
+#
 ##################################################################

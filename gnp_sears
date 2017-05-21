@@ -1,0 +1,113 @@
+#gnuplot script for Sears function for various camberlines
+
+set terminal pngcairo size 700,524 enhanced font 'Verdana,10'
+
+wloop = 20	#number of frequencies at each geometry
+hloop = 3	#number of camber heights
+mloop = 3	#number of maxima locations
+
+set style line 1 lt 1 lw 1 lc "black"
+set style line 2 lt 2 lw 1 lc "blue"
+set style line 3 lt 3 lw 1 lc "red"
+set style line 4 lt 4 lw 1 lc "green"
+set style line 5 lt 5 lw 1
+set style line 6 lt 6 lw 1
+set style line 7 lt 7 lw 1
+set style line 8 lt 8 lw 1
+
+##########################################################
+
+set output 'sears.png'
+
+set xlabel 'Re{L}'
+set ylabel 'Im{L}'
+set title 'Sears Function for various camberlines'
+set grid
+set key outside t r
+
+hplot = 3	#camber height to plot
+mplot = 3	#maxima location to plot
+
+#varying maxima location for constant camber height
+#plot for [n = (hplot-1)*mloop : (hplot-1)*mloop+(mloop-1) ] 'response.dat' u 5:6 every :::n::n \
+#	title 'geometry'.n w l ls (n-(hplot-1)*mloop), \
+#	'response.dat' u 5:6:3 every (wloop/2 - 1):::(hplot-1)*mloop::(hplot-1)*mloop w labels notitle
+
+#varying camber height for constant maxima location
+#plot for [n = 1 : hloop] 'response.dat' u 5:6 every :::((n-1)*hloop + mplot-1)::((n-1)*hloop + mplot-1) \
+#	title 'geometry'.n w l ls n, \
+#	'response.dat' u 5:6:3 every (wloop/2 - 1):::1::1 w labels notitle
+
+#single plot
+plot 'response.dat' u 5:6 every :::0::0 \
+	title 'flat plate' w l ls 1
+
+###########################################################
+
+set output 'sears H-min.png'
+
+	set xlabel 'Re{L}'
+	set ylabel 'Im{L}'
+	set title 'Sears Function for varying peak location at small camber'
+	set grid
+	set key outside t r
+	
+	hplot = 1	#camber height to plot
+	
+	#varying maxima location for constant camber height
+	plot for [n = (hplot-1)*mloop : (hplot-1)*mloop+(mloop-1) ] 'response.dat' u 5:6 every :::n::n \
+		title 'geometry'.n w l ls (n-(hplot-1)*mloop), \
+		'response.dat' u 5:6:3 every (wloop/2 - 1):::(hplot-1)*mloop::(hplot-1)*mloop w labels notitle
+
+###########################################################
+
+set output 'sears H-max.png'
+
+	set xlabel 'Re{L}'
+	set ylabel 'Im{L}'
+	set title 'Sears Function for varying peak location at moderate camber'
+	set grid
+	set key outside t r
+	
+	hplot = hloop	#camber height to plot
+	
+	#varying maxima location for constant camber height
+	plot for [n = (hplot-1)*mloop : (hplot-1)*mloop+(mloop-1) ] 'response.dat' u 5:6 every :::n::n \
+		title 'geometry'.n w l ls (n-(hplot-1)*mloop), \
+		'response.dat' u 5:6:3 every (wloop/2 - 1):::(hplot-1)*mloop::(hplot-1)*mloop w labels notitle
+
+###########################################################
+
+set output 'sears M-forward.png'
+
+	set xlabel 'Re{L}'
+	set ylabel 'Im{L}'
+	set title 'Sears Function for varying camber with a forward peak'
+	set grid
+	set key outside t r
+	
+	mplot = 1	#maxima location to plot
+	
+	#varying camber height for constant maxima location
+	plot for [n = 1 : hloop] 'response.dat' u 5:6 every :::((n-1)*hloop + mplot-1)::((n-1)*hloop + mplot-1) \
+		title 'geometry'.n w l ls n, \
+		'response.dat' u 5:6:3 every (wloop/2 - 1):::1::1 w labels notitle
+
+###########################################################
+
+set output 'sears M-backward.png'
+
+	set xlabel 'Re{L}'
+	set ylabel 'Im{L}'
+	set title 'Sears Function for varying camber with a backward peak'
+	set grid
+	set key outside t r
+	
+	mplot = mloop	#maxima location to plot
+	
+	#varying camber height for constant maxima location
+	plot for [n = 1 : hloop] 'response.dat' u 5:6 every :::((n-1)*hloop + mplot-1)::((n-1)*hloop + mplot-1) \
+		title 'geometry'.n w l ls n, \
+		'response.dat' u 5:6:3 every (wloop/2 - 1):::1::1 w labels notitle
+
+###########################################################

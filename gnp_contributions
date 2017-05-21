@@ -1,0 +1,124 @@
+#gnuplot script for Sears function with separate unsteady and quasi-steady lift
+
+set terminal pngcairo size 700,524 enhanced font 'Verdana,10'
+
+wloop = 20	#number of frequencies at each geometry
+hloop = 3	#number of camber heights modelled
+mloop = 3	#number of peak locations modelled
+
+set style line 1 lt 1 lw 1 lc "black" 
+set style line 2 lt 2 lw 1 lc "blue"
+set style line 3 lt 3 lw 1 lc "red"
+set style line 4 lt 4 lw 1 lc "green"
+set style line 5 lt 5 lw 1
+set style line 6 lt 6 lw 1
+set style line 7 lt 7 lw 1
+set style line 8 lt 8 lw 1
+
+#########################################################
+
+set output 'sears separate.png'
+
+set key outside t r
+set xlabel 'Re(L)'
+set ylabel 'Im(L)'
+set title 'Unsteady and Quasi-steady contributions to lift'
+set grid
+
+#set xrange [-2:2]
+#set yrange [-2:2]
+
+hplot = 1
+mplot = 1
+
+block = hloop*(hplot-1)+mplot - 1
+
+
+plot 'response.dat'    u  5:6  every :::block::block title 'l0' w l ls 1, \
+	'response.dat' u  8:9  every :::block::block title 'l1' w l ls 2, \
+	'response.dat' u 11:12 every :::block::block title 'l2' w l ls 3, \
+	'response.dat' u   5:6:3 every (wloop/2 -1):::block::block notitle w labels, \
+	'response.dat' u   8:9:3 every (wloop/2 -1):::block::block notitle w labels, \
+	'response.dat' u 11:12:3 every (wloop/2 -1):::block::block notitle w labels
+
+#########################################################
+
+set output 'sears separate H-min.png'
+
+	set xlabel 'Re{L}'
+	set ylabel 'Im{L}'
+	set title 'Sears Function for varying peak location at small camber'
+	set grid
+	set key outside t r
+	
+	hplot = 1	#camber height to plot
+	
+	#varying maxima location for constant camber height
+	plot    for [n = (hplot-1)*mloop : (hplot-1)*mloop+(mloop-1) ] 'response.dat' u  8:9  every :::n::n \
+		title 'l1: geometry'.n w l ls (n-(hplot-1)*mloop), \
+		for [n = (hplot-1)*mloop : (hplot-1)*mloop+(mloop-1) ] 'response.dat' u 11:12 every :::n::n \
+		title 'l2: geometry'.n w l ls (n-(hplot-1)*mloop), \
+		'response.dat' u  8:9:3  every (wloop/2 - 1):::(hplot-1)*mloop::(hplot-1)*mloop w labels notitle, \
+		'response.dat' u 11:12:3 every (wloop/2 - 1):::(hplot-1)*mloop::(hplot-1)*mloop w labels notitle
+
+###########################################################
+
+set output 'sears separate H-max.png'
+
+	set xlabel 'Re{L}'
+	set ylabel 'Im{L}'
+	set title 'Sears Function for varying peak location at moderate camber'
+	set grid
+	set key outside t r
+	
+	hplot = hloop	#camber height to plot
+	
+	#varying maxima location for constant camber height
+	plot    for [n = (hplot-1)*mloop : (hplot-1)*mloop+(mloop-1) ] 'response.dat' u  8:9  every :::n::n \
+		title 'l1: geometry'.n w l ls (n-(hplot-1)*mloop), \
+		for [n = (hplot-1)*mloop : (hplot-1)*mloop+(mloop-1) ] 'response.dat' u 11:12 every :::n::n \
+		title 'l2: geometry'.n w l ls (n-(hplot-1)*mloop), \
+		'response.dat' u  8:9:3  every (wloop/2 - 1):::(hplot-1)*mloop::(hplot-1)*mloop w labels notitle, \
+		'response.dat' u 11:12:3 every (wloop/2 - 1):::(hplot-1)*mloop::(hplot-1)*mloop w labels notitle
+
+###########################################################
+
+set output 'sears separate M-forward.png'
+
+	set xlabel 'Re{L}'
+	set ylabel 'Im{L}'
+	set title 'Sears Function for varying camber with a forward peak'
+	set grid
+	set key outside t r
+	
+	mplot = 1	#maxima location to plot
+	
+	#varying camber height for constant maxima location
+	plot    for [n = 1:hloop] 'response.dat' u  8:9  every :::((n-1)*hloop + mplot-1)::((n-1)*hloop + mplot-1) \
+		title 'l1: geometry'.n w l ls n, \
+		for [n = 1:hloop] 'response.dat' u 11:12 every :::((n-1)*hloop + mplot-1)::((n-1)*hloop + mplot-1) \
+		title 'l2: geometry'.n w l ls n, \
+		'response.dat' u  8:9:3  every (wloop/2 - 1):::1::1 w labels notitle, \
+		'response.dat' u 11:12:3 every (wloop/2 - 1):::1::1 w labels notitle
+
+###########################################################
+
+set output 'sears separate M-backward.png'
+
+	set xlabel 'Re{L}'
+	set ylabel 'Im{L}'
+	set title 'Sears Function for varying camber with a backward peak'
+	set grid
+	set key outside t r
+	
+	mplot = mloop	#maxima location to plot
+	
+	#varying camber height for constant maxima location
+	plot    for [n = 1:hloop] 'response.dat' u  8:9  every :::((n-1)*hloop + mplot-1)::((n-1)*hloop + mplot-1) \
+		title 'l1: geometry'.n w l ls n, \
+		for [n = 1:hloop] 'response.dat' u 11:12 every :::((n-1)*hloop + mplot-1)::((n-1)*hloop + mplot-1) \
+		title 'l2: geometry'.n w l ls n, \
+		'response.dat' u  8:9:3  every (wloop/2 - 1):::1::1 w labels notitle, \
+		'response.dat' u 11:12:3 every (wloop/2 - 1):::1::1 w labels notitle
+
+###########################################################

@@ -22,14 +22,17 @@ complex, dimension(N,2) :: up_upper, up_lower
 integer :: i,j,r,s
 
 open(unit=file1, file='response.dat', action='write', status='replace')
-write(file1,*) '# camber height,', 'maxima location,', 'reduced frequency,', &
-                'norm(l),','Re{l},','Im{l}'
+write(file1,*) '# camber height,','maxima location,','reduced frequency,','norm(l),','Re{l},','Im{l}'
 
 open(unit=file2, file='zetafield.dat', action='write', status='replace')
 write(file2,*) '#  x  ,  y  ,  Re{zeta}  ,  Im{zeta}  ,  tau'
 
 open(unit=file3, file='psifield.dat', action='write', status='replace')
-write(file3,*) '#  x  ,  y  ,  Re{psi}  ,  Im{psi}'
+write(file3,*) '#  x  ,  y  ,  Re{psi}  ,  Im{psi}  ,  Re{vhat}  , Im{vhat}'
+
+open(unit=file4, file='velocities.dat', action='write', status='replace')
+write(file4,*) '#  x  ,  y  ,  Re{u , v}  ,  Im{u , v}'
+
 
 print *, 'start'
 
@@ -77,28 +80,27 @@ do 1 s = 1,wloop
 
         L(i,j,s) = response
         
-        !go to 2 !comment out for single iteration
-                if (s.eq.1) then
-                if (j.eq.1) then
-                if (i.eq.1) then
+        !              1, 2, 3, 4,                                           5,              6        
+        !write(file1,rFORMAT) 100.0*h, 100.0*m, k, norm2([real(response),aimag(response)]), real(response), aimag(response)
+        
+        if (s.eq.wloop) then
+        write(file1,*) ''
+        end if
+
+        if (single.eq.1) then
+                if (s.eq.1 .and. j.eq.1 .and. i.eq.1) then
+                print *, 'k=',k
+                print *, 'h=',h
+                print *, 'm=',m
                 go to 3
                 end if
                 end if
-                end if
-        2 continue
 
                 do 4 r = 1,5
                 if (((i-1)*mloop*wloop + (j-1)*wloop + s).eq.int(r*hloop*mloop*wloop/5.0)) then
                 print *, r*20,'%'
                 end if
                 4 continue
-
-!              1, 2, 3, 4,                                           5,              6        
-write(file1,*) h, m, k, norm2([real(response),aimag(response)]), real(response), aimag(response)
-
-if (s.eq.wloop) then
-write(file1,*) ''
-end if
 
 1 continue
 
@@ -107,6 +109,7 @@ end if
 close(unit=file1, status='keep')
 close(unit=file2, status='keep')
 close(unit=file3, status='keep')
+close(unit=file4, status='keep')
 
 
 end program main

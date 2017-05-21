@@ -43,52 +43,51 @@ prhs_lower    = 0.0
         !inlet stagnation line corner
         row = 1
         
-        stencil_upper(row,row)    = -4.0
-        stencil_upper(row,row+1)  =  2.0
+        stencil_upper(row,row   ) = -3.0
+        stencil_upper(row,row+1 ) =  2.0
         stencil_upper(row,row+Ny) =  1.0
         
-        stencil_lower(row,row)    = -4.0
-        stencil_lower(row,row+1)  =  2.0
+        stencil_lower(row,row   ) = -3.0
+        stencil_lower(row,row+1 ) =  2.0
         stencil_lower(row,row+Ny) =  1.0
         
-        prhs_upper(row) = -zeta_upper(1,1)*dc*dc/2.0
-        prhs_lower(row) = -zeta_lower(1,1)*dc*dc/2.0
+        prhs_upper(row) = zeta_upper(1,1)*dc*(imag/kappa - dc)
+        prhs_lower(row) = zeta_lower(1,1)*dc*(imag/kappa - dc)
         
         !inlet surface nodes
         do 1 j = 2,Ny-1
                 
                 row = j
                 
-                stencil_upper(row,row)    = -4.0
-                stencil_lower(row,row)    = -4.0
+                stencil_upper(row,row)    = -3.0
+                stencil_lower(row,row)    = -3.0
                 
-                stencil_upper(row,row+1)  =  1.0
-                stencil_upper(row,row-1)  =  1.0
-                
-                stencil_lower(row,row+1)  =  1.0
-                stencil_lower(row,row-1)  =  1.0
-                
+                stencil_upper(row,row+1 ) =  1.0
+                stencil_upper(row,row-1 ) =  1.0
                 stencil_upper(row,row+Ny) =  1.0
+                
+                stencil_lower(row,row+1 ) =  1.0
+                stencil_lower(row,row-1 ) =  1.0
                 stencil_lower(row,row+Ny) =  1.0
                 
-                prhs_upper(row) = -zeta_upper(1,j)*dc*dc
-                prhs_lower(row) = -zeta_lower(1,j)*dc*dc
+                prhs_upper(row) = zeta_upper(1,j)*dc*(imag/kappa - dc)
+                prhs_lower(row) = zeta_lower(1,j)*dc*(imag/kappa - dc)
                 
         1 continue
         
         !inlet free stream corner
         row = Ny
         
-        stencil_upper(row,row)    = -3.0
+        stencil_upper(row,row)    = -2.0
         stencil_upper(row,row-1)  =  1.0
         stencil_upper(row,row+Ny) =  1.0
         
-        stencil_lower(row,row)    = -3.0
+        stencil_lower(row,row)    = -2.0
         stencil_lower(row,row-1)  =  1.0
         stencil_lower(row,row+Ny) =  1.0
         
-        prhs_upper(row) = -zeta_upper(1,Ny)*dc*dc
-        prhs_lower(row) = -zeta_lower(1,Ny)*dc*dc
+        prhs_upper(row) = zeta_upper(1,Ny)*dc*(imag/kappa - dc)
+        prhs_lower(row) = zeta_lower(1,Ny)*dc*(imag/kappa - dc)
 
 !
 
@@ -175,18 +174,16 @@ do 2 i = 2,Nx-1
         !outlet/wake corner
         row = (Nx-1)*Ny + 1
         
-        stencil_upper(row,row)    = -1.0
+        stencil_upper(row,row)    = -3.0
+        stencil_upper(row,row+1)  =  2.0
         stencil_upper(row,row-Ny) =  1.0
         
-        stencil_lower(row,row)    = -1.0
+        stencil_lower(row,row)    = -3.0
+        stencil_lower(row,row+1)  =  2.0
         stencil_lower(row,row-Ny) =  1.0
         
-        !prhs_upper(row) = -imag*zeta_upper(Nx,1)/kappa
-        !prhs_lower(row) = -imag*zeta_lower(Nx,1)/kappa
-        
-        !for |zeta| = i*kappa
-        prhs_upper(row) = -imag*zeta_upper(Nx,1)/kappa
-        prhs_lower(row) = -imag*zeta_lower(Nx,1)/kappa
+        prhs_upper(row) = -zeta_upper(Nx,1)*(dc + imag/kappa)*dc
+        prhs_lower(row) = -zeta_lower(Nx,1)*(dc + imag/kappa)*dc
         
         !outlet surface nodes
         do 4 j = 2,Ny-1
@@ -341,11 +338,6 @@ do 1 j = 2,Ny
 
 1 continue
 
-!do i = Ny,1,-1
-!        write(*, '(100F6.3)') influence(1:Nx-le0,i)
-!end do
-
-
 !velocity field away from blade
 do 2 i = 2,Np
         
@@ -373,11 +365,6 @@ do 3 i = 2,Np
 
 3 continue
 
-!print *, 'u'
-!do i = Ny,1,-1
-!        write(*,'(100F7.4)') ufield_upper(1:Nx,i)
-!end do
-
 
 !travel time at each grid point
 !reference phase to leading edge
@@ -396,37 +383,41 @@ zeta_upper = imag*kappa*exp(imag*omega*tau_upper)
 zeta_lower = imag*kappa*exp(imag*omega*tau_lower)
 
 !write vorticity field
-do 10 j = Ny,1,-1
+if (loop(1).eq.plot(1) .and. loop(2).eq.plot(2) .and. loop(3).eq.plot(3)) then
+        
+        do 10 j = Ny,1,-1
+        
+                xc(2) = -j*dc
+                
+                do 11 i = 1,Nx
+                        
+                        xc(1) = -2.0 + (i-1)*dc
+                        
+                        write(file2,*) xc(1), xc(2), real(zeta_lower(i,j)), aimag(zeta_lower(i,j)), tau_lower(i,j)
+                
+                11 continue
+                
+                write(file2,*) ''
+        
+        10 continue
+                
+        do 12 j = 1,Ny
+                        
+                xc(2) = j*dc
+                
+                do 13 i = 1,Nx
+                
+                        xc(1) = -2.0 + (i-1)*dc
+                        
+                        write(file2,*) xc(1), xc(2), real(zeta_upper(i,j)), aimag(zeta_upper(i,j)), tau_upper(i,j)
+                
+                13 continue
+                
+                write(file2,*) ''
+        
+        12 continue
 
-        xc(2) = -j*dc
-        
-        do 11 i = 1,Nx
-                
-                xc(1) = -2.0 + (i-1)*dc
-                
-                write(file2,*) xc(1), xc(2), real(zeta_lower(i,j)), aimag(zeta_lower(i,j)), tau_lower(i,j)
-        
-        11 continue
-        
-        write(file2,*) ''
-
-10 continue
-        
-do 12 j = 1,Ny
-                
-        xc(2) = j*dc
-        
-        do 13 i = 1,Nx
-        
-                xc(1) = -2.0 + (i-1)*dc
-                
-                write(file2,*) xc(1), xc(2), real(zeta_upper(i,j)), aimag(zeta_upper(i,j)), tau_upper(i,j)
-        
-        13 continue
-        
-        write(file2,*) ''
-
-12 continue
+end if
 
 
 end subroutine zeta_field
