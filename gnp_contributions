@@ -2,7 +2,7 @@
 
 set terminal pngcairo size 700,524 enhanced font 'Verdana,10'
 
-wloop = 20	#number of frequencies at each geometry
+wloop = 30	#number of frequencies at each geometry
 hloop = 3	#number of camber heights modelled
 mloop = 3	#number of peak locations modelled
 

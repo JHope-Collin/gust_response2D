@@ -40,9 +40,9 @@ print *, 'start'
 !do 1 j = mloop,1,-1
 !do 1 s = wloop,1,-1
         
+do 1 s = 1,wloop
 do 1 i = 1,hloop
 do 1 j = 1,mloop
-do 1 s = 1,wloop
         
         !initialise
         gamS     = 0.0
@@ -83,7 +83,7 @@ do 1 s = 1,wloop
         !              1, 2, 3, 4,                                           5,              6        
         !write(file1,rFORMAT) 100.0*h, 100.0*m, k, norm2([real(response),aimag(response)]), real(response), aimag(response)
         
-        if (s.eq.wloop) then
+        if (j.eq.mloop) then
         write(file1,*) ''
         end if
 

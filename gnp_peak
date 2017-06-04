@@ -1,0 +1,36 @@
+
+#gnuplot script for Sears function for various camberlines
+
+set terminal pngcairo size 700,524 enhanced font 'Verdana,10'
+
+wloop = 5 	#number of frequencies at each geometry
+hloop = 2	#number of camber heights
+mloop = 30	#number of maxima locations
+
+set style line 1 lt 1 lw 3 lc "black"
+set style line 2 lt 2 lw 3 lc "blue"
+set style line 3 lt 3 lw 3 lc "red"
+set style line 4 lt 4 lw 3 lc "green"
+set style line 5 lt 5 lw 3
+set style line 6 lt 6 lw 3
+set style line 7 lt 7 lw 3
+set style line 8 lt 8 lw 3
+
+##########################################################
+
+set output 'sears v peak location.png'
+
+	set xlabel 'Position of peak camber (% chord)'
+	set ylabel 'Response Magnitude'
+	set title 'Airfoil response across varying peak camber location'
+	set grid
+	set key outside t r
+	
+	set xrange [0:100]
+	
+	plot    for [n=1:wloop] 'response.dat' u 2:4 every :::(n-1)::(n-1) \
+		notitle w l ls n, \
+		for [n=1:wloop]'response.dat' u 2:4:3 every ::(mloop-1):(n-1):(mloop-1):(n-1) \
+		w labels notitle
+
+###########################################################

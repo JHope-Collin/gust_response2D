@@ -37,6 +37,15 @@ complex, dimension(N,2) :: up_upper, up_lower
 
 integer :: poisson_order, i, j, Nx, Ny
 
+!cgeev variables
+integer :: info
+integer :: lda
+complex, dimension(N,N) :: adum
+complex, dimension(N)   :: eigval
+complex, dimension(N,N) :: eigvecL, eigvecR
+complex, dimension(5*N) :: CWORK
+real, dimension(2*N)    :: RWORK
+
 !intialise
 i = 1
 j = 1
@@ -48,7 +57,7 @@ poisson_order = Nx*Ny
 vhat_u = 0.0
 vhat_l = 0.0
 xc = 0.0
-
+lda = Np+1
 
 call zeta_field(gamS,Ux,zeta_upper,zeta_lower)
 
@@ -64,6 +73,13 @@ psi_upper(1:Nx,1:Ny) = cvec2mat(poisson_order, Nx, Ny, streamfunction_upper(1:po
 psi_lower(1:Nx,1:Ny) = cvec2mat(poisson_order, Nx, Ny, streamfunction_lower(1:poisson_order))
 
 call unsteadymatrix(psi_upper,psi_lower,a,rhs,up_upper,up_lower)
+
+adum = a
+
+!call cgeev('V','V', lda, a, N, eigval, eigvecL, N, eigvecR, N, CWORK, size(CWORK), RWORK, info)
+!print *, 'eig info', info
+
+a = adum
 
 gamU = solvecomplex(Np+1,a,rhs)
 
@@ -155,7 +171,7 @@ a   = 0.0
 rhs = 0.0
 
 call panel(Np+1,xv,c,nor,t)
-phase0 = exp(imag*kappa*(xv(1)-1.0))
+phase0 = exp(imag*kappa*wakestart)
 shift  = exp(imag*kappa*dc)
 
 
@@ -234,7 +250,8 @@ do 1 i = 1,Np
                 !3 continue
 
 !kelvin condition
-a(Np+1,1:Np) = imag*omega
+!a(Np+1,1:Np) = imag*omega
+a(Np+1,1:Np) = (1.0 - exp(imag*omega*dc))
 
 a(Np+1,Np+1) = (1.0 , 0.0)
 

@@ -7,19 +7,19 @@ implicit none
 
 !options
 !number of loops
-integer, parameter :: hloop = 3         !number of camber height iterations
-integer, parameter :: mloop = 3         !number of maxima location iterations
-integer, parameter :: wloop = 20        !number of frequency iterations
+integer, parameter :: hloop = 2         !number of camber height iterations
+integer, parameter :: mloop = 30        !number of maxima location iterations
+integer, parameter :: wloop = 6         !number of frequency iterations
 
 !iteration ranges
-real, parameter :: wstart = 0.10        !lowest frequency modelled
-real, parameter :: wend   = 1.00        !highest frequency modelled
+real, parameter :: wstart = 0.05        !lowest frequency modelled
+real, parameter :: wend   = 1.50        !highest frequency modelled
 
-real, parameter :: hstart = 0.0         !lowest camber modelled in %
+real, parameter :: hstart = 4.0         !lowest camber modelled in %
 real, parameter :: hend   = 4.0         !highest camber modelled in %
 
-real, parameter :: mstart = 20.0        !lowest maxima location modelled in %
-real, parameter :: mend   = 80.0        !highest maxima location modelled in %
+real, parameter :: mstart = 15.0        !lowest maxima location modelled in %
+real, parameter :: mend   = 85.0        !highest maxima location modelled in %
 
 !discretisation routine
 integer, parameter :: resolution = 10   !panels per wavelength
@@ -35,7 +35,7 @@ real, parameter    :: cpanel = 0.75     !position of collocation point
 
 !wake modelling
 integer, parameter :: wake       = 1       !1 for wake, 0 for no wake
-integer, parameter :: Nwp        = 12      !number of wake periods modelled
+integer, parameter :: Nwp        = 15      !number of wake periods modelled
 integer, parameter :: wakefar    = 99999   !chord lengths from trailing edge to start wake far field
 real, parameter    :: wakestart  = 0.25    !distance from trailing edge of first wake vortex
 

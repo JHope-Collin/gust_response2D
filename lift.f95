@@ -53,7 +53,7 @@ uu_lower = 0.0
 uinf = [1.0 , tan(alpha)]
 
 call panel(Np+1,xv,c,nor,t)
-phase0 = exp(imag*kappa*(xv(1)-1.0))
+phase0 = exp(imag*kappa*wakestart)
 shift  = exp(imag*kappa*dc)
 
 
@@ -67,7 +67,8 @@ do 2 i = 1,Np
         dphi = dphi + up_upper(i,1)
         dphi = dphi - up_lower(i,1)
 
-        dl1(i) = imag*omega*dphi
+        !dl1(i) = dphi*(imag*omega)
+        dl1(i) = dphi*(1.0 - exp(-imag*omega*dc))/dc
         
 2 continue
 
